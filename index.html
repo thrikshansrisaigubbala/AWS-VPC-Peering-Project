@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>AWS VPC Networking Project</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f7fb;
+            color: #263445;
+            line-height: 1.7;
+        }
+
+        header {
+            background: linear-gradient(135deg, #101d35, #087eae);
+            color: white;
+            text-align: center;
+            padding: 65px 20px;
+        }
+
+        header h1 {
+            font-size: 36px;
+            margin-bottom: 15px;
+        }
+
+        header p {
+            font-size: 17px;
+        }
+
+        .badge {
+            display: inline-block;
+            margin-top: 18px;
+            padding: 7px 16px;
+            border-radius: 20px;
+            background: #d5f8e5;
+            color: #17643c;
+            font-weight: bold;
+        }
+
+        nav {
+            background: #14253d;
+            text-align: center;
+            padding: 14px;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin: 8px 14px;
+            display: inline-block;
+        }
+
+        nav a:hover {
+            color: #66d9ff;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1100px;
+            margin: auto;
+        }
+
+        section {
+            padding: 40px 0;
+        }
+
+        h2 {
+            color: #123d63;
+            margin-bottom: 20px;
+            font-size: 27px;
+        }
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background: white;
+            padding: 23px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px #0000000d;
+            border: 1px solid #e1e8ef;
+        }
+
+        .card h3 {
+            color: #087eae;
+            margin-bottom: 10px;
+        }
+
+        .number {
+            font-size: 32px;
+            font-weight: bold;
+            color: #087eae;
+        }
+
+        .architecture {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .vpc {
+            background: #e8f5fc;
+            border: 2px solid #1682b3;
+            border-radius: 12px;
+            padding: 22px;
+        }
+
+        .vpc-two {
+            background: #eaf8ed;
+            border-color: #39965a;
+        }
+
+        .subnet {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 15px;
+            border: 1px solid #d6e2eb;
+        }
+
+        .success {
+            color: #198754;
+            font-weight: bold;
+        }
+
+        .pending {
+            color: #9a6700;
+            font-weight: bold;
+        }
+
+        code {
+            background: #e8edf3;
+            padding: 3px 6px;
+            border-radius: 4px;
+            overflow-wrap: anywhere;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+
+        th, td {
+            padding: 13px;
+            text-align: left;
+            border: 1px solid #dce4ec;
+        }
+
+        th {
+            background: #123d63;
+            color: white;
+        }
+
+        .table-wrap {
+            overflow-x: auto;
+        }
+
+        .notice {
+            padding: 17px;
+            background: #fff4db;
+            border-left: 5px solid #e2a52e;
+            border-radius: 5px;
+            margin-top: 15px;
+        }
+
+        footer {
+            background: #14253d;
+            color: white;
+            text-align: center;
+            padding: 25px 15px;
+            margin-top: 30px;
+        }
+
+        @media (max-width: 600px) {
+            header h1 {
+                font-size: 28px;
+            }
+
+            h2 {
+                font-size: 23px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>AWS VPC Networking Project</h1>
+
+    <p>Virtual Private Cloud Configuration and VPC Peering</p>
+
+    <p>AWS Mumbai Region | ap-south-1</p>
+
+    <span class="badge">VPC Peering: Active</span>
+</header>
+
+<nav>
+    <a href="#overview">Overview</a>
+    <a href="#architecture">Architecture</a>
+    <a href="#resources">Resources</a>
+    <a href="#routing">Routing</a>
+    <a href="#testing">Test Results</a>
+</nav>
+
+<main class="container">
+
+    <section id="overview">
+        <h2>Project Overview</h2>
+
+        <p>
+            This project demonstrates how to create and configure two
+            Amazon Virtual Private Clouds (VPCs) using AWS. It includes
+            public and private subnets, EC2 instances, an Internet Gateway,
+            route tables, security groups, and VPC peering.
+        </p>
+
+        <p>
+            The purpose is to demonstrate private IP communication between
+            EC2 instances located in different subnets and different VPCs.
+        </p>
+
+        <br>
+
+        <div class="cards">
+            <div class="card">
+                <div class="number">2</div>
+                <h3>Custom VPCs</h3>
+                <p>Two configured virtual networks.</p>
+            </div>
+
+            <div class="card">
+                <div class="number">3</div>
+                <h3>Subnets</h3>
+                <p>One public subnet and two private subnets.</p>
+            </div>
+
+            <div class="card">
+                <div class="number">3</div>
+                <h3>EC2 Instances</h3>
+                <p>One instance in each subnet.</p>
+            </div>
+
+            <div class="card">
+                <div class="number">2</div>
+                <h3>Successful Tests</h3>
+                <p>Both reported ping tests succeeded.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="architecture">
+        <h2>Network Architecture</h2>
+
+        <div class="architecture">
+
+            <div class="vpc">
+                <h3>VPC 1 — Project-VPC1</h3>
+
+                <p>CIDR: <code>128.0.0.0/16</code></p>
+
+                <div class="subnet">
+                    <h4>Public Subnet</h4>
+                    <p>CIDR: <code>128.0.1.0/24</code></p>
+                    <p>EC2 Private IP: <code>128.0.1.50</code></p>
+                    <p>Internet Gateway attached</p>
+                </div>
+
+                <div class="subnet">
+                    <h4>Private Subnet</h4>
+                    <p>CIDR: <code>128.0.2.0/24</code></p>
+                    <p>EC2 Private IP: <code>128.0.2.182</code></p>
+                    <p>No public IPv4 address</p>
+                </div>
+            </div>
+
+            <div class="vpc vpc-two">
+                <h3>VPC 2 — Project-VPC2</h3>
+
+                <p>CIDR: <code>28.200.0.0/16</code></p>
+
+                <div class="subnet">
+                    <h4>Private Subnet</h4>
+                    <p>CIDR: <code>28.200.0.0/24</code></p>
+                    <p>EC2 Private IP: <code>28.200.0.9</code></p>
+                    <p>No public IPv4 address</p>
+                </div>
+
+                <div class="subnet">
+                    <h4>VPC Peering</h4>
+                    <p>Connection status: <span class="success">Active</span></p>
+                    <p>Private routing configured between both VPCs.</p>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <section id="resources">
+        <h2>AWS Resources</h2>
+
+        <div class="table-wrap">
+            <table>
+                <tr>
+                    <th>Resource</th>
+                    <th>Name</th>
+                    <th>CIDR / Details</th>
+                </tr>
+
+                <tr>
+                    <td>VPC 1</td>
+                    <td>Project-VPC1</td>
+                    <td>128.0.0.0/16</td>
+                </tr>
+
+                <tr>
+                    <td>VPC 2</td>
+                    <td>Project-VPC2</td>
+                    <td>28.200.0.0/16</td>
+                </tr>
+
+                <tr>
+                    <td>Public Subnet</td>
+                    <td>VPC1-Public-Subnet</td>
+                    <td>128.0.1.0/24</td>
+                </tr>
+
+                <tr>
+                    <td>Private Subnet</td>
+                    <td>VPC1-Private-Subnet</td>
+                    <td>128.0.2.0/24</td>
+                </tr>
+
+                <tr>
+                    <td>Private Subnet</td>
+                    <td>VPC2-Private-Subnet</td>
+                    <td>28.200.0.0/24</td>
+                </tr>
+
+                <tr>
+                    <td>Internet Gateway</td>
+                    <td>Project-IGW</td>
+                    <td>Attached to VPC1</td>
+                </tr>
+
+                <tr>
+                    <td>VPC Peering</td>
+                    <td>Project-VPC1-to-VPC2-Peering</td>
+                    <td>Active</td>
+                </tr>
+            </table>
+        </div>
+    </section>
+
+    <section id="routing">
+        <h2>Routing Configuration</h2>
+
+        <div class="card">
+            <h3>VPC1 Public Route Table</h3>
+            <p><code>128.0.0.0/16</code> → Local</p>
+            <p><code>0.0.0.0/0</code> → Internet Gateway</p>
+            <p><code>28.200.0.0/16</code> → VPC Peering</p>
+        </div>
+
+        <br>
+
+        <div class="card">
+            <h3>VPC1 Private Route Table</h3>
+            <p><code>128.0.0.0/16</code> → Local</p>
+            <p><code>28.200.0.0/16</code> → VPC Peering</p>
+        </div>
+
+        <br>
+
+        <div class="card">
+            <h3>VPC2 Private Route Table</h3>
+            <p><code>28.200.0.0/16</code> → Local</p>
+            <p><code>128.0.0.0/16</code> → VPC Peering</p>
+        </div>
+    </section>
+
+    <section id="testing">
+        <h2>Connectivity Test Results</h2>
+
+        <div class="card">
+            <h3>Test 1: VPC1 Public to VPC1 Private</h3>
+
+            <p>Source: <code>128.0.1.50</code></p>
+            <p>Destination: <code>128.0.2.182</code></p>
+
+            <p class="success">
+                SUCCESS — 4 packets received, 0% packet loss.
+            </p>
+        </div>
+
+        <br>
+
+        <div class="card">
+            <h3>Test 2: VPC1 Public to VPC2 Private</h3>
+
+            <p>Source: <code>128.0.1.50</code></p>
+            <p>Destination: <code>28.200.0.9</code></p>
+
+            <p class="success">
+                SUCCESS — 4 packets received, 0% packet loss.
+            </p>
+        </div>
+
+        <div class="notice">
+            <strong>Note:</strong> Reverse-direction ping from VPC2 to VPC1
+            has not yet been tested. This page reports only the tests
+            that were confirmed successful.
+        </div>
+    </section>
+
+    <section>
+        <h2>Project Conclusion</h2>
+
+        <div class="card">
+            <p>
+                The project demonstrates VPC creation, subnet configuration,
+                Internet Gateway routing, VPC peering, route-table configuration,
+                and connectivity testing between EC2 instances.
+            </p>
+
+            <p>
+                Both reported ping tests succeeded with zero packet loss.
+                The project illustrates how VPC peering can enable private
+                IP communication between separate VPCs when routes and
+                security rules are configured correctly.
+            </p>
+        </div>
+    </section>
+
+</main>
+
+<footer>
+    <p>AWS VPC Networking and VPC Peering Project</p>
+    <p>Educational Cloud Computing Project</p>
+</footer>
+
+</body>
+</html>
